@@ -18,6 +18,8 @@ package com.partnet.junit;
 
 import java.lang.annotation.Annotation;
 
+import com.partnet.automation.RuntimeConfiguration;
+import com.partnet.automation.util.Dialog;
 import com.partnet.junit.annotations.browser.Android;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
@@ -45,6 +47,7 @@ public class SeAuto
 {
 
   private static final Logger log = LoggerFactory.getLogger(SeAuto.class);
+  private static final String DEBUG_SYS_PROP = "test.config.debug";
 
   private Class<?> klass;
 
@@ -71,7 +74,7 @@ public class SeAuto
     DriverProvider driverProvider = weld.instance().select(DriverProvider.class).get();
 
     if (super.isIgnored(method)) {
-      runChild(method, notifier);
+      super.runChild(method, notifier);
       return;
     }
 
@@ -112,6 +115,12 @@ public class SeAuto
     }
 
     takeScreenshot(method, driverProvider);
+
+    if(Boolean.getBoolean(DEBUG_SYS_PROP)) {
+      log.info("Debug mode turned on. Test halted until debug dialog accepted");
+      Dialog.showDialog("Debug Mode", "Accept dialog to finish the test and close the browser");
+    }
+
     log.debug("Ending browser for test " + getTestName(method));
     driverProvider.end();
   }

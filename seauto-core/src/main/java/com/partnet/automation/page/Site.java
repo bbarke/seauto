@@ -77,28 +77,6 @@ public abstract class Site
   public void open(final String url)
   {
     LOG.info("Attempting to go to url: {}", url);
-
-    // TODO: Apr 19, 2014 (bbarker) - Remove debug code when bug is found
-    /*
-     * Used to try and find a getting page bug... List<String> urls = new
-     * ArrayList<>(); urls.add("https://dod-emall-dev.csd.disa.mil/acct/");
-     * urls.add("https://dod.emall-dev.dla.mil/acct/");
-     * urls.add("https://dod.emall-stage.dla.mil/acct/");
-     * urls.add("https://emall-dev.part.net/acct/");
-     * //urls.add("http://docs.seleniumhq.org/");
-     * urls.add("https://teamcity.part.net/");
-     * urls.add("https://issues.part.net/");
-     * urls.add("https://issues.part.net/confluence");
-     * urls.add("https://issues.part.net/timecard");
-     * urls.add("http://fredo.part.net:8080/jbehave-data-provider/");
-     * urls.add("http://blowfish.part.net/");
-     * 
-     * Stopwatch stop = new Stopwatch(); for(int i = 0; i < 20; i++) {
-     * for(String urlTest : urls) { stop.start(); LOG.debug("nav to {}",
-     * urlTest); this.webDriver.get(urlTest); stop.stop();
-     * LOG.debug("\ttime: {}", stop.toString()); stop.reset(); } }
-     */
-
     try {
       this.webDriver.navigate().to(url);
     }
@@ -114,8 +92,11 @@ public abstract class Site
       waitForPageToLoad();
 
       StringBuilder sb = new StringBuilder();
-      sb.append("\n*****************************************************************\n").append("*****************************************************************\n").append("There was a timeout exception with the navigate().to(url) method in selenium!!\n")
-          .append("*****************************************************************\n").append("*****************************************************************\n");
+      sb.append("\n*****************************************************************\n")
+        .append("*****************************************************************\n")
+        .append("There was a timeout exception with the navigate().to(url) method in selenium!!\n")
+        .append("*****************************************************************\n")
+        .append("*****************************************************************\n");
 
       LOG.error(sb.toString());
     }
