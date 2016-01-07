@@ -65,6 +65,21 @@ public class Response {
     return new JSONArray(getBody());
   }
 
+  /**
+   * Ensures the respon's status code is correct
+   * @param statusCode status code of the response
+   * @return this response object
+   * @throws IllegalStateException if the response is not what is expected
+   */
+  public Response validateStatusCode(int statusCode) {
+    if(getStatusCode() != statusCode) {
+      throw new IllegalStateException(String.format(
+          "Response status code was not '%d' but was '%d'!\n'%s'", statusCode, this.getStatusCode(), this));
+    }
+
+    return this;
+  }
+
   public List<CookieAdapter> getCookies() {
     return cookies;
   }
@@ -85,7 +100,7 @@ public class Response {
 
     sb.append("contentType:\n\t").append(contentType).append("\n");
 
-    if(!body.isEmpty())
+    if(body != null && !body.isEmpty())
       sb.append("body\n").append(body);
 
     return sb.toString();

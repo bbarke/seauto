@@ -83,10 +83,18 @@ public class ApacheHttpAdapter
         public Response.Builder handleResponse(final HttpResponse response)
             throws ClientProtocolException, IOException {
           Response.Builder rb = new Response.Builder();
-          rb.setBody(EntityUtils.toString(response.getEntity()))
-              .setStatusCode(response.getStatusLine().getStatusCode())
-              .setHeaders(convertApacheToHeaderAdapter(response.getAllHeaders()))
-              .setContentType(convertApacheToHeaderAdapter(response.getEntity().getContentType())[0]);
+
+          if(response.getEntity() != null) {
+            rb.setBody(EntityUtils.toString(response.getEntity()));
+          }
+
+          rb.setStatusCode(response.getStatusLine().getStatusCode());
+          rb.setHeaders(convertApacheToHeaderAdapter(response.getAllHeaders()));
+
+          if(response.getEntity() != null) {
+            rb.setContentType(convertApacheToHeaderAdapter(response.getEntity().getContentType())[0]);
+          }
+
           return rb;
         }
       };

@@ -16,6 +16,8 @@
 
 package com.partnet.automation.http;
 
+import org.openqa.selenium.Cookie;
+
 import java.util.Date;
 
 /**
@@ -62,6 +64,15 @@ public class CookieAdapter {
 
   public Date getExpiryDate() {
     return expiryDate;
+  }
+
+  public Cookie getSeleniumCookie() {
+    Cookie selCookie = new Cookie.Builder(name, value)
+        .domain(domain)
+        .expiresOn(expiryDate)
+        .path(path)
+        .build();
+    return selCookie;
   }
 
   @Override

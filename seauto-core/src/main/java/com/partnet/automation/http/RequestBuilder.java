@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by Brent Barker on 12/7/15.
  */
-public class RequestBuilder {
+public class RequestBuilder<T extends RequestBuilder> {
 
   private static final Logger LOG = LoggerFactory.getLogger(RequestBuilder.class);
   private final String domain;
@@ -45,48 +45,53 @@ public class RequestBuilder {
     this.httpAdapter = httpAdapter;
   }
 
-  public RequestBuilder setMethod(HttpMethod method) {
+  public T setMethod(HttpMethod method) {
     this.method = method;
-    return this;
+    return (T) this;
   }
 
-  public RequestBuilder setPath(String path) {
+  public T setPath(String path) {
     this.path = path;
-    return this;
+    return (T) this;
   }
 
-  public RequestBuilder setBody(String body) {
+  public T setBody(String body) {
     this.body = body;
-    return this;
+    return (T) this;
   }
 
-  public RequestBuilder setBody(JSONObject body) {
+  public T setBody(JSONObject body) {
     return setBody(body.toString());
   }
 
-  public RequestBuilder setContentType(String contentType) {
+  public T setContentType(String contentType) {
     this.contentType = contentType;
-    return this;
+    return (T) this;
   }
 
-  public RequestBuilder addParameter(String name, String value) {
+  public T addParameter(String name, String value) {
     parameters.add(new Parameter(name, value));
-    return this;
+    return (T) this;
   }
 
-  public RequestBuilder addHeader(HeaderAdapter header) {
+  public T addHeader(HeaderAdapter header) {
     headers.add(header);
-    return this;
+    return (T) this;
   }
 
-  public RequestBuilder addCookie(CookieAdapter cookie) {
+  public T addCookie(CookieAdapter cookie) {
     this.cookies.add(cookie);
-    return this;
+    return (T) this;
   }
 
-  public RequestBuilder addHeader(String name, String value) {
+  public T addCookies(List<CookieAdapter> cookies) {
+    this.cookies.addAll(cookies);
+    return (T) this;
+  }
+
+  public T addHeader(String name, String value) {
     headers.add(new HeaderAdapter(name, value));
-    return this;
+    return (T) this;
   }
 
 

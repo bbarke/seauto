@@ -88,6 +88,7 @@ public class TestRequestBuilder {
   public void test_putMethod() {
 
     JSONObject json = new JSONObject();
+    json.put("title", "nesciunt quas odio");
     json.put("body", "test");
     json.put("userId", "500");
 
@@ -105,6 +106,30 @@ public class TestRequestBuilder {
   }
 
   @Test
+  public void test_putValidateResponse() {
+
+    JSONObject json = new JSONObject();
+    json.put("title", "nesciunt quas odio");
+    json.put("body", "test");
+    json.put("userId", "500");
+
+    Response response = rb.setMethod(HttpMethod.PUT)
+        .setBody(json)
+        .setPath("/posts/5")
+        .build()
+        .validateStatusCode(200);
+
+    JSONObject expect = new JSONObject();
+    expect.put("id", 5);
+    expect.put("title", "nesciunt quas odio");
+    expect.put("body", "test");
+    expect.put("userId", 500);
+
+    Assert.assertEquals(expect.toString(), response.getBodyAsJson().toString());
+    Assert.assertEquals(200, response.getStatusCode());
+  }
+
+  @Test
   public void test_deleteMethod() {
     Response response = rb.setMethod(HttpMethod.DELETE)
         .setPath("/posts/5")
@@ -115,9 +140,10 @@ public class TestRequestBuilder {
   }
 
   @Test
-  public void test_cookiesAgain() {
+  public void test_cookies() {
 
     JSONObject json = new JSONObject();
+    json.put("title", "nesciunt quas odio");
     json.put("body", "test");
     json.put("userId", "500");
 
@@ -146,9 +172,6 @@ public class TestRequestBuilder {
     expect.put("userId", 500);
     Assert.assertEquals(expect.toString(), response.getBodyAsJson().toString());
 
-    //java.lang.AssertionError:
-    // expected: com.crongle.automation.http.CookieAdapter<CookieAdapter{version=0, name='test', value='test-value', domain='http://jsonplaceholder.typicode.com', path='null', expiryDate=null}>
-    //  but was: com.crongle.automation.http.CookieAdapter<CookieAdapter{version=0, name='test', value='test-value', domain='http://jsonplaceholder.typicode.com', path='null', expiryDate=null}>
     Assert.assertEquals(response.getCookies().size(), 1);
     Assert.assertEquals(response.getCookies().get(0), cookie);
 
@@ -166,47 +189,5 @@ public class TestRequestBuilder {
     Assert.assertEquals(response.getCookies().get(1), secondCookie);
 
     rb.clearCookies();
-
-
-    System.out.println(response);
   }
-
-  @Test
-  public void test_cookies() {
-    RequestBuilder rb = new RequestBuilder("http://localhost:8080", new ApacheHttpAdapter());
-    JSONObject obj = new JSONObject();
-    obj.put("username", "bbarker@part.net");
-    obj.put("password", "123456");
-
-
-    Response response = rb.setMethod(HttpMethod.POST).setPath("/rest-api/public/user-session").setContentType("application/json").setBody(obj).build();
-
-    JSONObject geoPoint = new JSONObject();
-    geoPoint.put("lat", 40.6916132);
-    geoPoint.put("lon", 112.00105009999999);
-
-    JSONObject state = new JSONObject();
-    state.put("isoCode", "UT");
-
-    JSONObject pickupAddress = new JSONObject();
-    pickupAddress.put("city", "West Valley City");
-    pickupAddress.put("geopoint", geoPoint);
-    pickupAddress.put("state", state);
-    pickupAddress.put("addressLine1", "");
-
-    JSONObject callout = new JSONObject();
-    callout.put("title", "Rest API callout!!");
-    callout.put("description", "This was made by the rest api!");
-    callout.put("type", "QUOTEABLE");
-    callout.put("pickupAddress", pickupAddress);
-
-    response = rb.setMethod(HttpMethod.POST).setPath("/rest-api/callouts").setContentType("application/json")
-        .setBody(callout).build();
-
-
-    for(CookieAdapter cookie : response.getCookies())
-      System.out.println("Cookie: " + cookie);
-  }
-
-
 }

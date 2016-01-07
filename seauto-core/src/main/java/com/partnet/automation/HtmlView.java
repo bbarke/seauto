@@ -115,6 +115,8 @@ public abstract class HtmlView
    * Reported bugs to selenium that have been closed as "Working as Intended: <a
    * href="http://code.google.com/p/selenium/issues/detail?id=2676">2676</a>, <a
    * href="http://code.google.com/p/selenium/issues/detail?id=2936">2936</a>
+   * <p>
+   * This method uses the {@link HtmlView#clickElem(WebElement)} method.
    *
    * @author <a href="mailto:bbarker@part.net">bbarker</a>
    *
@@ -124,13 +126,16 @@ public abstract class HtmlView
   protected final HtmlView clickAndWait(WebElement webElement)
   {
     LOG.debug("click element {}", webElement);
-    webElement.click();
+    clickElem(webElement);
     waitForPageToLoad();
     return this;
   }
 
   /**
    * Replaces the text in a WebElement with the provided text.
+   *
+   * <p>
+   * This method uses the {@link HtmlView#clickElem(WebElement)} method.
    *
    * @param webElement
    *          - target for update
@@ -153,7 +158,7 @@ public abstract class HtmlView
     for (int i = 0; i < 3; i++) {
       // click on elm, as suggested in
       // http://stackoverflow.com/questions/20936403/sendkeys-are-not-working-in-selenium-webdriver
-      webElement.click();
+      clickElem(webElement);
       webElement.clear();
       webElement.sendKeys(value);
 
@@ -455,6 +460,16 @@ public abstract class HtmlView
     return clickAndHandleAlert(elm, true, false);
   }
 
+  /**
+   * Clicks, then handles the resulting alert.
+   * <p>
+   * This method uses the {@link HtmlView#clickElem(WebElement)} method.
+   *
+   * @param elm - element to be clicked
+   * @param accept - true to accept alert, false to dismiss.
+   * @param throwIfNoAlertPresent - true to throw exception if there is no alert present, false otherwise
+   * @return the string of the alert message
+   */
   private String clickAndHandleAlert(WebElement elm, boolean accept, boolean throwIfNoAlertPresent)
   {
     String alertMsg = null;
@@ -483,7 +498,7 @@ public abstract class HtmlView
       executeScript(String.format(alertJs.toString(), accept));
     }
 
-    elm.click();
+    clickElem(elm);
 
     if (browser.isHeadless()) {
       Cookie alertCookie = webDriver.manage().getCookieNamed(ALERT_COOKIE_NAME);
@@ -1349,5 +1364,16 @@ public abstract class HtmlView
     {
       return String.format("MultipleWindowHandlesVisibleCondition - windowsToWaitFor:%d", windowsToWaitFor);
     }
+  }
+
+  /**
+   * Helper method to wrap the click functionality. Useful when a extra step needs to be performed to ensure
+   * a reliable click. For example, when dealing with a
+   * <a href="http://getbootstrap.com/examples/navbar-fixed-top/">fixed navbar</a> sometimes the page should be scrolled
+   * to prevent clicking the navbar, which may be on top of the button.
+   * @param elem {@link WebElement} to click.
+   */
+  protected void clickElem(WebElement elem) {
+    elem.click();
   }
 }

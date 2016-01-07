@@ -1,3 +1,16 @@
+# SeAuto 0.9.2 (TBA)
+
+## Features
+- Added Appium.io to the project
+- Introduce clickElem() method into HtmlView to allow special cases while clicking an element
+- Introduce 'jumpTo' method into the project, to allow navigating directly to a page
+- Introduce http package which enables easy endpoint/rest API testing
+
+## Bug Fixes
+- Fixed test.config.debug for JUnit tests
+- JUnit now closes the browser on failure
+- Cleaned up javadoc warnings
+
 # SeAuto 0.9.1 (2015-04-20)
 
 ## Features
@@ -11,4 +24,3 @@
 
 ## API
 - Initial version of SeAuto
-
