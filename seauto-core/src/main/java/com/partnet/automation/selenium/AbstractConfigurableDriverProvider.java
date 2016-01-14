@@ -238,15 +238,13 @@ public abstract class AbstractConfigurableDriverProvider
     if (browserFromProp != null) {
       LOG.debug("Browser from property in use: '{}'", browserFromProp.name());
     }
+    else if (browser == null) {
+      browserFromProp = getDefaultBrowser();
+      LOG.debug("Default browser in use: '{}'", browserFromProp.name());
+    }
     else {
-      if (browser == null) {
-        browserFromProp = getDefaultBrowser();
-        LOG.debug("Default browser in use: '{}'", browserFromProp.name());
-      }
-      else {
-        browserFromProp = browser;
-        LOG.debug("Using specified browser: '{}'", browserFromProp.name());
-      }
+      browserFromProp = browser;
+      LOG.debug("Using specified browser: '{}'", browserFromProp.name());
     }
 
     Objects.requireNonNull(browserFromProp, "browser to use cannot be null");

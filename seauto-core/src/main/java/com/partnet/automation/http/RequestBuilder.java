@@ -94,9 +94,12 @@ public class RequestBuilder<T extends RequestBuilder> {
     return (T) this;
   }
 
-
+  /**
+   * Clears the cookies in this builder object along with the cookies in the {@link HttpAdapter}
+   */
   public void clearCookies() {
     httpAdapter.clearCookies();
+    cookies.clear();
   }
 
   public Response build() {
